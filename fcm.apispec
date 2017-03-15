@@ -1,0 +1,5 @@
+Oven.bake :'RoboMsg::Client', destination: 'lib/robo_msg/', object_mapping: './response_types.yml' do
+  format :json
+
+  post :message, '/fcm/send', as: :push, class: 'Response'
+end

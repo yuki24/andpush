@@ -1,0 +1,17 @@
+Response:
+  multicast_id: Integer
+  success: Integer
+  failure: Integer
+  canonical_ids: Integer
+  results: Array(Result)
+
+Result:
+  message_id: String
+  registration_id: String
+  error: String
+
+ErrorResponse:
+  operation: String
+  notification_key_name: String
+  notification_key: String
+  registration_ids: Array(String)
