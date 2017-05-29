@@ -21,5 +21,13 @@ class AndpushTest < Minitest::Test
     response = client.push(json)
 
     assert_equal '200', response.code
+
+    json = response.json
+
+    assert_equal(-1, json[:multicast_id])
+    assert_equal  1, json[:success]
+    assert_equal  0, json[:failure]
+    assert_equal  0, json[:canonical_ids]
+    assert_equal "fake_message_id", json[:results][0][:message_id]
   end
 end
