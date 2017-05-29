@@ -8,6 +8,7 @@ class AndpushTest < Minitest::Test
     client = Andpush.build(server_key)
     json   = {
       to: device_token,
+      dry_run: true,
       notification: {
         title: "Update",
         body: "Your weekly summary is ready"
