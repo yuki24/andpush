@@ -1,11 +1,24 @@
 require 'test_helper'
 
 class AndpushTest < Minitest::Test
-  def test_that_it_has_a_version_number
-    refute_nil ::Andpush::VERSION
-  end
+  def test_it_makes_http_request_to_fcm
+    server_key   = ENV.fetch('FCM_TEST_SERVER_KEY')
+    device_token = ENV.fetch('FCM_TEST_REGISTRATION_TOKEN')
 
-  def test_it_does_something_useful
-    assert false
+    client = Andpush.build(server_key)
+    json   = {
+      to: device_token,
+      notification: {
+        title: "Update",
+        body: "Your weekly summary is ready"
+      },
+      data: {
+        extra: "data"
+      }
+    }
+
+    response = client.push(json)
+
+    assert_equal '200', response.code
   end
 end
