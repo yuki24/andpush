@@ -42,10 +42,6 @@ result[:error]           # => nil, "InvalidRegistration" or something else
 result[:registration_id] # => nil
 ```
 
-## TODO
-
- * Write integration tests
-
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/yuki24/andpush. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
