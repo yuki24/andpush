@@ -1,6 +1,6 @@
 require 'object_mapper'
 
-module RoboMsg
+module Andpush
   class ObjectConverter
     METHOD_TO_CLASS_MAP = {
       push: Response

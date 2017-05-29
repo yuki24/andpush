@@ -1,4 +1,4 @@
-module RoboMsg
+module Andpush
   class APIError < StandardError; end
   class NetworkError < APIError; end
 

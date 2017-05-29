@@ -1,11 +1,11 @@
-require 'robo_msg/version'
-require 'robo_msg/client'
+require 'andpush/version'
+require 'andpush/client'
 
-module RoboMsg
+module Andpush
   DOMAIN = 'https://fcm.googleapis.com'.freeze
 
   def self.build(server_key, domain: nil)
-    ::RoboMsg::Client
+    ::Andpush::Client
       .new(domain || DOMAIN)
       .register_interceptor(Authenticator.new(server_key))
   end

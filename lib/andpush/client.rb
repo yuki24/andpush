@@ -1,11 +1,9 @@
 # frozen-string-literal: true
 require 'net/http'
-require 'robo_msg/exceptions'
-require 'robo_msg/json_handler'
-require 'robo_msg/models'
-require 'robo_msg/object_mapping'
+require 'andpush/exceptions'
+require 'andpush/json_handler'
 
-module RoboMsg
+module Andpush
   class Client
     attr_reader :domain, :proxy_addr, :proxy_port, :proxy_user, :proxy_password
 
@@ -22,7 +20,6 @@ module RoboMsg
       register_interceptor(JsonSerializer.new)
       register_observer(ResponseHandler.new)
       register_observer(JsonDeserializer.new)
-      register_observer(ObjectConverter.new)
     end
 
     def register_interceptor(interceptor)

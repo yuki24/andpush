@@ -1,7 +1,7 @@
 require 'json'
 require 'delegate'
 
-module RoboMsg
+module Andpush
   class JsonResponse < DelegateClass(Net::HTTPResponse)
     alias response __getobj__
     alias headers to_hash
