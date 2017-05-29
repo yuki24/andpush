@@ -5,9 +5,9 @@ require 'andpush/json_handler'
 
 module Andpush
   class Client
-    attr_reader :domain, :proxy_addr, :proxy_port, :proxy_user, :proxy_password
+    attr_reader :domain, :proxy_addr, :proxy_port, :proxy_user, :proxy_password, :request_handler
 
-    def initialize(domain, proxy_addr: nil, proxy_port: nil, proxy_user: nil, proxy_password: nil, **options)
+    def initialize(domain, proxy_addr: nil, proxy_port: nil, proxy_user: nil, proxy_password: nil, request_handler: RequestHandler.new, **options)
       @domain = domain
       @proxy_addr = proxy_addr
       @proxy_port = proxy_port
@@ -15,6 +15,7 @@ module Andpush
       @proxy_password = proxy_password
       @interceptors = []
       @observers = []
+      @request_handler = request_handler
       @options = DEFAULT_OPTIONS.merge(options)
 
       register_interceptor(JsonSerializer.new)
@@ -61,10 +62,8 @@ module Andpush
     def request(request_class, uri, body, headers, options = {})
       uri, body, headers, options = @interceptors.reduce([uri, body, headers, @options.merge(options)]) { |r, i| i.before_request(*r) }
 
-      begin
-        response = Net::HTTP.start(uri.host, uri.port, proxy_addr, proxy_port, proxy_user, proxy_password, options, use_ssl: (uri.scheme == HTTPS)) do |http|
-          http.request request_class.new(uri, headers), body
-        end
+      response = begin
+        request_handler.call(request_class, uri, headers, body, proxy_addr, proxy_port, proxy_user, proxy_password, options)
       rescue Timeout::Error, Errno::EINVAL, Errno::ECONNRESET, EOFError, Net::HTTPBadResponse, Net::HTTPHeaderSyntaxError, Net::ProtocolError => e
         raise NetworkError, "A network error occurred: #{e.class} (#{e.message})"
       end
@@ -77,5 +76,15 @@ module Andpush
       uri.query = URI.encode_www_form(query) unless query.empty?
       uri
     end
+
+    class RequestHandler
+      def call(request_class, uri, headers, body, proxy_addr, proxy_port, proxy_user, proxy_password, options = {})
+        Net::HTTP.start(uri.host, uri.port, proxy_addr, proxy_port, proxy_user, proxy_password, options, use_ssl: (uri.scheme == HTTPS)) do |http|
+          http.request request_class.new(uri, headers), body
+        end
+      end
+    end
+
+    private_constant :RequestHandler
   end
 end

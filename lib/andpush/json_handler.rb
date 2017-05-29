@@ -29,7 +29,10 @@ module Andpush
     }.freeze
 
     def before_request(uri, body, headers, options)
-      [uri, (body.nil? ? body : JSON.dump(body)), headers.merge(JSON_REQUEST_HEADERS), options]
+      headers = headers.merge(JSON_REQUEST_HEADERS)
+      body    = body.nil? || body.is_a?(String) ? body : body.to_json
+
+      [uri, body, headers, options]
     end
   end
 
