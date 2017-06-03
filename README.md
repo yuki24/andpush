@@ -2,6 +2,8 @@
 
 Andpush is an HTTP client for FCM (Firebase Cloud Messaging). It implements [Firebase Cloud Messaging HTTP Protocol](https://firebase.google.com/docs/cloud-messaging/http-server-ref).
 
+The `andpush` gem performs **about 3.7x faster** than the fcm gem in a single-threaded environment. In a multi-threaded environment, it could perform **10x or even faster!**
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -9,10 +11,6 @@ Add this line to your application's Gemfile:
 ```ruby
 gem 'andpush'
 ```
-
-And then execute:
-
-    $ bundle
 
 Or install it yourself as:
 
@@ -40,6 +38,24 @@ result = json[:results].first
 result[:message_id]      # => "0:1489498959348701%3b8aef473b8aef47"
 result[:error]           # => nil, "InvalidRegistration" or something else
 result[:registration_id] # => nil
+```
+
+## Performance
+
+The andpush gem uses [HTTP persistent connections](https://en.wikipedia.org/wiki/HTTP_persistent_connection) to improve performance. This is done by [the net-http-persistent gem](https://github.com/drbrain/net-http-persistent). [A simple benchmark](https://gist.github.com/yuki24/e0db97e887b8b6eb1932c41b4cea4a99) shows that the andpush gem performs at least 3x faster than the fcm gem:
+
+```sh
+$ ruby bench.rb
+Warming up --------------------------------------
+             andpush     2.000  i/100ms
+                 fcm     1.000  i/100ms
+Calculating -------------------------------------
+             andpush     28.009  (± 7.1%) i/s -    140.000  in   5.019399s
+                 fcm      7.452  (±13.4%) i/s -     37.000  in   5.023139s
+
+Comparison:
+             andpush:       28.0 i/s
+                 fcm:        7.5 i/s - 3.76x  slower
 ```
 
 ## Contributing
