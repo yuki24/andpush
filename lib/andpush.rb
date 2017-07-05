@@ -6,9 +6,9 @@ require 'andpush/client'
 module Andpush
   DOMAIN = 'https://fcm.googleapis.com'.freeze
 
-  def self.build(server_key, domain: nil, request_handler: ConnectionPool.new)
+  def self.build(server_key, domain: nil, name: nil, proxy: nil, pool_size: Net::HTTP::Persistent::DEFAULT_POOL_SIZE)
     ::Andpush::Client
-      .new(domain || DOMAIN, request_handler: request_handler)
+      .new(domain || DOMAIN, request_handler: ConnectionPool.new(name: name, proxy: proxy, pool_size: pool_size))
       .register_interceptor(Authenticator.new(server_key))
   end
 
