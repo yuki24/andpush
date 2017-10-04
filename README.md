@@ -26,8 +26,20 @@ require 'andpush'
 server_key   = "..." # Your server key
 device_token = "..." # The device token of the device you'd like to push a message to
 
-client   = Andpush.build(server_key)
-response = client.push(to: device_token, notification: { title: "Update", body: "Your weekly summary is ready" }, data: { extra: "data" })
+client  = Andpush.build(server_key)
+payload = {
+  to: device_token,
+  notification: {
+    title: "Update",
+    body: "Your weekly summary is ready"
+  },
+  data: { extra: "data" }
+}
+
+response = client.push(payload)
+
+headers = response.headers
+headers['Retry-After'] # => returns 'Retry-After'
 
 json = response.json
 json[:canonical_ids] # => 0
@@ -38,6 +50,20 @@ result = json[:results].first
 result[:message_id]      # => "0:1489498959348701%3b8aef473b8aef47"
 result[:error]           # => nil, "InvalidRegistration" or something else
 result[:registration_id] # => nil
+```
+
+### Topic Messaging:
+
+```ruby
+topic   = "/topics/foo-bar"
+payload = {
+  to: topic,
+  data: {
+    message: "This is a Firebase Cloud Messaging Topic Message!",
+  }
+}
+
+response = client.push(payload) # => sends a message to the topic
 ```
 
 ## Performance
