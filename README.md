@@ -1,8 +1,8 @@
 # Andpush
 
-Andpush is an HTTP client for FCM (Firebase Cloud Messaging). It implements [Firebase Cloud Messaging HTTP Protocol](https://firebase.google.com/docs/cloud-messaging/http-server-ref).
+Andpush is an HTTP client for FCM (Firebase Cloud Messaging). It implements [the Firebase Cloud Messaging HTTP Protocol](https://firebase.google.com/docs/cloud-messaging/http-server-ref).
 
-The `andpush` gem performs **about 3.7x faster** than the fcm gem in a single-threaded environment. In a multi-threaded environment, it could perform **10x or even faster!**
+The `andpush` gem performs **about 3.7x faster** than [the fcm gem](https://github.com/spacialdb/fcm) in a single-threaded environment. In a multi-threaded environment, it could perform **10x or even faster!**
 
 ## Installation
 
