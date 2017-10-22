@@ -4,15 +4,15 @@ script:   bundle exec rake test
 sudo:     false
 
 rvm:
-  - 2.2.7
-  - 2.3.4
-  - 2.4.1
+  - 2.2.8
+  - 2.3.5
+  - 2.4.2
   - ruby-head
-  - jruby-9.1.10.0
+  - jruby-9.1.13.0
   - jruby-head
 
 matrix:
   allow_failures:
     - rvm: ruby-head
-    - rvm: jruby-9.1.10.0
+    - rvm: jruby-9.1.13.0
     - rvm: jruby-head
