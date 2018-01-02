@@ -3,6 +3,10 @@ cache:    bundler
 script:   bundle exec rake test
 sudo:     false
 
+before_install:
+  - gem update --system
+  - gem pristine bundler
+
 rvm:
   - 2.2.8
   - 2.3.5
