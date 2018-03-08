@@ -4,7 +4,7 @@ Andpush is an HTTP client for FCM (Firebase Cloud Messaging). It implements [the
 
 The `andpush` gem performs **about 3.7x faster** than [the fcm gem](https://github.com/spacialdb/fcm) in a single-threaded environment. In a multi-threaded environment, it could perform **10x or even faster!**
 
-**If you are thining to send push notifications from Rails, consider using the [pushing gem](https://github.com/yuki24/pushing), a push notification framework that does not hurt.**
+**If you are thinking to send push notifications from Rails, consider using the [pushing gem](https://github.com/yuki24/pushing), a push notification framework that does not hurt.**
 
 ## Installation
 
