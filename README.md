@@ -4,6 +4,8 @@ Andpush is an HTTP client for FCM (Firebase Cloud Messaging). It implements [the
 
 The `andpush` gem performs **about 3.7x faster** than [the fcm gem](https://github.com/spacialdb/fcm) in a single-threaded environment. In a multi-threaded environment, it could perform **10x or even faster!**
 
+**If you are thining to send push notifications from Rails, consider using [pushing gem](https://github.com/yuki24/pushing), a push notification framework that does not hurt.**
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -26,7 +28,7 @@ require 'andpush'
 server_key   = "..." # Your server key
 device_token = "..." # The device token of the device you'd like to push a message to
 
-client  = Andpush.build(server_key)
+client  = Andpush.new(server_key, pool_size: 25)
 payload = {
   to: device_token,
   notification: {
