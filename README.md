@@ -1,4 +1,4 @@
-# Andpush
+# Andpush [![Build Status](https://travis-ci.org/yuki24/andpush.svg?branch=master)](https://travis-ci.org/yuki24/andpush)
 
 Andpush is an HTTP client for FCM (Firebase Cloud Messaging). It implements [the Firebase Cloud Messaging HTTP Protocol](https://firebase.google.com/docs/cloud-messaging/http-server-ref).
 
