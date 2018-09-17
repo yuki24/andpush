@@ -68,6 +68,31 @@ payload = {
 response = client.push(payload) # => sends a message to the topic
 ```
 
+## Using HTTP/2 (Exmerimental)
+
+The current GitHub master branch ships with experimental support for HTTP/2. It takes advantage of the fantastic library, [libcurl](https://curl.haxx.se/libcurl/). In order to use it, replace `Android.new(...)` with `Android.http2(...)`:
+
+```diff
++# Do not forget to add the curb gem to your Gemfile
++require 'curb'
+
+-client = Andpush.new(server_key, pool_size: 25)
++client = Andpush.http2(server_key) # no need to specify the `pool_size' as HTTP/2 maintains a single connection
+```
+
+### Prerequisites
+
+ * [libcurl](https://curl.haxx.se/download.html) 7.43.0 or later
+ * [nghttp2](https://nghttp2.org/blog/) 1.0 or later
+
+**Make sure that your production environment has the compatible versions installed. If you are not sure what version of libcurl you are using, try running `curl --version` and make sure it has `HTTP2` listed in the Features:**
+
+![Curl version](assets/curl-version.png "Curl version")
+
+**If you wish to use the HTTP/2 client in heroku, make sure you are using [the `Heroku-18` stack](https://devcenter.heroku.com/articles/heroku-18-stack). Older stacks, such as `Heroku-16` and `Cedar-14` do not ship with a version of libcurl that has support for HTTP/2.**
+
+If you are using an older version of libcurl that doesn't support HTTP/2, don't worry. It will just fall back to HTTP 1.1 (of course without header compression and multiplexing.)
+
 ## Performance
 
 The andpush gem uses [HTTP persistent connections](https://en.wikipedia.org/wiki/HTTP_persistent_connection) to improve performance. This is done by [the net-http-persistent gem](https://github.com/drbrain/net-http-persistent). [A simple benchmark](https://gist.github.com/yuki24/e0db97e887b8b6eb1932c41b4cea4a99) shows that the andpush gem performs at least 3x faster than the fcm gem:

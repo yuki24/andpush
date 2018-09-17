@@ -13,6 +13,22 @@ module Andpush
         .register_interceptor(Authenticator.new(server_key))
     end
     alias new build
+
+    def http2(server_key, domain: nil)
+      begin
+        require 'curb' if !defined?(Curl)
+      rescue LoadError => error
+        raise LoadError, "Could not load the curb gem. Make sure to install the gem by running:\n\n" \
+                         "  $ gem i curb\n\n" \
+                         "Or the Gemfile has the following declaration:\n\n" \
+                         "  gem 'curb'\n\n" \
+                         "  (#{error.class}: #{error.message})"
+      end
+
+      ::Andpush::Client
+        .new(domain || DOMAIN, request_handler: Http2RequestHandler.new)
+        .register_interceptor(Authenticator.new(server_key))
+    end
   end
 
   class Authenticator
@@ -42,5 +58,47 @@ module Andpush
     end
   end
 
-  private_constant :Authenticator, :ConnectionPool
+  class Http2RequestHandler
+    BY_HEADER_LINE   = /[\r\n]+/.freeze
+    HEADER_VALUE     = /^(\S+): (.+)/.freeze
+
+    attr_reader :multi
+
+    def initialize(max_connects: 100)
+      @multi = Curl::Multi.new
+
+      @multi.pipeline     = Curl::CURLPIPE_MULTIPLEX
+      @multi.max_connects = max_connects
+    end
+
+    def call(request_class, uri, headers, body, *_)
+      easy = Curl::Easy.new(uri.to_s)
+
+      # This ensures libcurl waits for the connection to reveal if it is
+      # possible to pipeline/multiplex on before it continues.
+      easy.setopt(Curl::CURLOPT_PIPEWAIT, 1)
+
+      easy.multi       = @multi
+      easy.version     = Curl::HTTP_2_0
+      easy.headers     = headers || {}
+      easy.post_body   = body if request_class::REQUEST_HAS_BODY
+
+      easy.public_send(:"http_#{request_class::METHOD.downcase}")
+
+      Response.new(
+        Hash[easy.header_str.split(BY_HEADER_LINE).flat_map {|s| s.scan(HEADER_VALUE) }],
+        easy.body,
+        easy.response_code.to_s, # to_s for comatibility with Net::HTTP
+        easy,
+      ).freeze
+    end
+
+    Response = Struct.new(:headers, :body, :code, :raw_response) do
+      alias to_hash headers
+    end
+
+    private_constant :BY_HEADER_LINE, :HEADER_VALUE, :Response
+  end
+
+  private_constant :Authenticator, :ConnectionPool, :Http2RequestHandler
 end
