@@ -68,9 +68,9 @@ payload = {
 response = client.push(payload) # => sends a message to the topic
 ```
 
-## Using HTTP/2 (Exmerimental)
+## Using HTTP/2 (Experimental)
 
-The current GitHub master branch ships with experimental support for HTTP/2. It takes advantage of the fantastic library, [libcurl](https://curl.haxx.se/libcurl/). In order to use it, replace `Android.new(...)` with `Android.http2(...)`:
+The current GitHub master branch ships with experimental support for HTTP/2. It takes advantage of the fantastic library, [libcurl](https://curl.haxx.se/libcurl/). In order to use it, replace `Andpush.new(...)` with `Andpush.http2(...)`:
 
 ```diff
 +# Do not forget to add the curb gem to your Gemfile
