@@ -60,6 +60,8 @@ class AndpushTest < Minitest::Test
     assert_equal  0, json[:canonical_ids]
     assert_equal "fake_message_id", json[:results][0][:message_id]
 
-    assert_match "HTTP/2", response.raw_response.header_str
+    if defined?(Curl::CURLPIPE_MULTIPLEX)
+      assert_match "HTTP/2", response.raw_response.header_str
+    end
   end
 end
