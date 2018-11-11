@@ -61,6 +61,7 @@ module Andpush
   class Http2RequestHandler
     BY_HEADER_LINE   = /[\r\n]+/.freeze
     HEADER_VALUE     = /^(\S+): (.+)/.freeze
+    EMPTY_HEADERS    = {}.freeze
 
     attr_reader :multi
 
@@ -75,7 +76,7 @@ module Andpush
       easy = Curl::Easy.new(uri.to_s)
 
       easy.multi       = @multi
-      easy.headers     = headers || {}
+      easy.headers     = headers || EMPTY_HEADERS
       easy.post_body   = body if request_class::REQUEST_HAS_BODY
 
       if defined?(Curl::CURLPIPE_MULTIPLEX)
