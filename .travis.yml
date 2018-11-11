@@ -1,27 +1,9 @@
 language: ruby
 cache:    bundler
 script:   bundle exec rake test
-sudo:     required
+sudo:     false
 
 before_install:
-  - sudo apt-get build-dep curl
-
-  - wget https://github.com/nghttp2/nghttp2/releases/download/v1.33.0/nghttp2-1.33.0.tar.xz
-  - tar -xf nghttp2-1.33.0.tar.xz
-  - cd nghttp2-1.33.0
-  - ./configure
-  - make
-  - sudo make install
-
-  - wget http://curl.haxx.se/download/curl-7.43.0.tar.bz2
-  - tar -xvjf curl-7.43.0.tar.bz2
-  - cd curl-7.43.0
-  - ./configure
-  - make
-  - sudo make install
-  - sudo ldconfig
-  - curl --version
-
   - gem update --system
   - gem install bundler
 
