@@ -91,7 +91,7 @@ module Andpush
       Response.new(
         Hash[easy.header_str.split(BY_HEADER_LINE).flat_map {|s| s.scan(HEADER_VALUE) }],
         easy.body,
-        easy.response_code.to_s, # to_s for comatibility with Net::HTTP
+        easy.response_code.to_s, # to_s for compatibility with Net::HTTP
         easy,
       ).freeze
     end
