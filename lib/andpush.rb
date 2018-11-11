@@ -67,21 +67,23 @@ module Andpush
     def initialize(max_connects: 100)
       @multi = Curl::Multi.new
 
-      @multi.pipeline     = Curl::CURLPIPE_MULTIPLEX
+      @multi.pipeline     = Curl::CURLPIPE_MULTIPLEX if defined?(Curl::CURLPIPE_MULTIPLEX)
       @multi.max_connects = max_connects
     end
 
     def call(request_class, uri, headers, body, *_)
       easy = Curl::Easy.new(uri.to_s)
 
-      # This ensures libcurl waits for the connection to reveal if it is
-      # possible to pipeline/multiplex on before it continues.
-      easy.setopt(Curl::CURLOPT_PIPEWAIT, 1)
-
       easy.multi       = @multi
-      easy.version     = Curl::HTTP_2_0
       easy.headers     = headers || {}
       easy.post_body   = body if request_class::REQUEST_HAS_BODY
+
+      if defined?(Curl::CURLPIPE_MULTIPLEX)
+        # This ensures libcurl waits for the connection to reveal if it is
+        # possible to pipeline/multiplex on before it continues.
+        easy.setopt(Curl::CURLOPT_PIPEWAIT, 1)
+        easy.version = Curl::HTTP_2_0
+      end
 
       easy.public_send(:"http_#{request_class::METHOD.downcase}")
 
